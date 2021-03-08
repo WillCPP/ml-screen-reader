@@ -1,6 +1,8 @@
 # User  added ignores
 data/
 .vscode/
+wikipediaFiles/
+wikipediaFiles.zip
 
 # ================================================== Python ignores
 # Byte-compiled / optimized / DLL files
