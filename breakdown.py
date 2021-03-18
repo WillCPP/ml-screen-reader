@@ -2,6 +2,7 @@ from collections import OrderedDict
 import numpy as np
 import re
 import json
+from tempfile import TemporaryFile
 
 # Find by > < to decided if reading
 def keep(linelist):
@@ -37,6 +38,7 @@ f = open("wikipediaFiles\input\en.wikipedia.orgwiki%C3%86lfheah_of_Canterbury.ht
 d = OrderedDict()
 arr = np.ndarray(shape = (), dtype = object)
 oldlist = []
+oldClass = []
 #arr = np.array([], dtype = object)
 classArr = np.ndarray(shape = (1,))
 line = f.readline()
@@ -50,11 +52,13 @@ for x in f:
     if keep(newline):
         #arr = np.vstack([arr, np.array(newline, dtpe=object)])
         oldlist.append([newline])
-        classArr = np.append(1, classArr)
+        oldClass.append(1)
+        #classArr = np.append(1, classArr)
     else:
         #arr = np.vstack([arr, np.array(newline, dtype=object)])
         oldlist.append([newline])
-        classArr = np.append(0, classArr)
+        oldClass.append(1)
+        #classArr = np.append(0, classArr)
     #line = f.readline()
 
 #for x in f:
@@ -63,6 +67,7 @@ for x in f:
 f.close()
 print(oldlist[-1])
 arr = np.array(oldlist, dtype=object)
+classArr = np.array(oldClass)
 #print(oldlist)
 print(arr[-1][-1])
 print(type(arr[-1][-1]))
@@ -73,5 +78,9 @@ print(np.shape(classArr))
 #print(classArr)
 #print(d)
 
-with open("wikipediaFiles\output\en.wikipedia.orgwiki%C3%86lfheah_of_Canterbury.html.txt", 'w') as outfile:
-    json.dump(d, outfile)
+with open('trainning.npy', 'wb') as n:
+    np.save(n, arr)
+with open('trainningresults.npy', 'wb') as c:
+    np.save(c, classArr)
+#with open("wikipediaFiles\output\en.wikipedia.orgwiki%C3%86lfheah_of_Canterbury.html.txt", 'w') as outfile:
+#    json.dump(d, outfile)
