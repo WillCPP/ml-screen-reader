@@ -8,11 +8,6 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout, Activation, Flatten, BatchNormalization, Conv2D, MaxPooling2D
 from tensorflow.keras.optimizers import SGD
 from tensorflow.keras.utils import multi_gpu_model
-# from keras import backend as K
-# from keras.models import Sequential
-# from keras.layers import Dense, Dropout, Activation, Flatten, BatchNormalization, Conv2D, MaxPooling2D
-# from keras.optimizers import SGD
-# from keras.utils import multi_gpu_model
 # ================================================== Local
 from tensorflow.keras.datasets import fashion_mnist
 # ================================================== Local
@@ -21,25 +16,25 @@ if __name__ == '__main__':
         
     parser = argparse.ArgumentParser()
 
+    # # ================================================== AWS
+    # parser.add_argument('--epochs', type=int, default=10)
+    # parser.add_argument('--learning-rate', type=float, default=0.01)
+    # parser.add_argument('--batch-size', type=int, default=128)
+    # parser.add_argument('--gpu-count', type=int, default=os.environ['SM_NUM_GPUS'])
+    # parser.add_argument('--model-dir', type=str, default=os.environ['SM_MODEL_DIR'])
+    # parser.add_argument('--training', type=str, default=os.environ['SM_CHANNEL_TRAINING'])
+    # parser.add_argument('--validation', type=str, default=os.environ['SM_CHANNEL_VALIDATION'])
     # ================================================== AWS
+
+    # ================================================== Local
     parser.add_argument('--epochs', type=int, default=10)
     parser.add_argument('--learning-rate', type=float, default=0.01)
     parser.add_argument('--batch-size', type=int, default=128)
-    parser.add_argument('--gpu-count', type=int, default=os.environ['SM_NUM_GPUS'])
-    parser.add_argument('--model-dir', type=str, default=os.environ['SM_MODEL_DIR'])
-    parser.add_argument('--training', type=str, default=os.environ['SM_CHANNEL_TRAINING'])
-    parser.add_argument('--validation', type=str, default=os.environ['SM_CHANNEL_VALIDATION'])
-    # ================================================== AWS
-
-#     # ================================================== Local
-#     parser.add_argument('--epochs', type=int, default=10)
-#     parser.add_argument('--learning-rate', type=float, default=0.01)
-#     parser.add_argument('--batch-size', type=int, default=128)
-#     parser.add_argument('--gpu-count', type=int, default=0)
-#     parser.add_argument('--model-dir', type=str, default='/tmp')
-#     parser.add_argument('--training', type=str, default='data')
-#     parser.add_argument('--validation', type=str, default='data')
-#     # ================================================== Local
+    parser.add_argument('--gpu-count', type=int, default=0)
+    parser.add_argument('--model-dir', type=str, default='model')
+    parser.add_argument('--training', type=str, default='data')
+    parser.add_argument('--validation', type=str, default='data')
+    # ================================================== Local
     
     args, _ = parser.parse_known_args()
     
@@ -51,13 +46,13 @@ if __name__ == '__main__':
     training_dir   = args.training
     validation_dir = args.validation
     
-#     # ================================================== Local
-#     # Download the data set
-#     os.makedirs("./data", exist_ok = True)
-#     (x_train, y_train), (x_val, y_val) = fashion_mnist.load_data()
-#     np.savez('./data/training', image=x_train, label=y_train)
-#     np.savez('./data/validation', image=x_val, label=y_val)
-#     # ================================================== Local
+    # ================================================== Local
+    # Download the data set
+    os.makedirs("./data", exist_ok = True)
+    (x_train, y_train), (x_val, y_val) = fashion_mnist.load_data()
+    np.savez('./data/training', image=x_train, label=y_train)
+    np.savez('./data/validation', image=x_val, label=y_val)
+    # ================================================== Local
 
 
     x_train = np.load(os.path.join(training_dir, 'training.npz'))['image']
