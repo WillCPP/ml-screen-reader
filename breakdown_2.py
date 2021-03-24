@@ -40,9 +40,10 @@ path = 'wikipediaFiles/output/'
 
 
 def process(files, i):
-    d = np.empty(shape=(0,200), dtype=int)
-    c = np.array([], dtype=int)
+    count = 0
     for f in files:
+        d = np.empty(shape=(0,200), dtype=int)
+        c = np.array([], dtype=int)
         atStart = True
         atEnd = False
         classList = []
@@ -66,8 +67,9 @@ def process(files, i):
                 d = np.vstack((d, parser.data))
                 line = file.readline()
         c = np.append(c, np.array(classList, dtype=int))
-    np.save(f'dataset/data/{i}_data', d)
-    np.save(f'dataset/labels/{i}_labels', c)
+        np.save(f'dataset/data/{i}_{count}_data', d)
+        np.save(f'dataset/labels/{i}_{count}_labels', c)
+        count += 1
 
 def run():
     
