@@ -3,6 +3,7 @@ data/
 .vscode/
 wikipediaFiles/
 wikipediaFiles.zip
+dataset/
 
 # ================================================== Python ignores
 # Byte-compiled / optimized / DLL files
