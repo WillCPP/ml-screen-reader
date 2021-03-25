@@ -37,8 +37,6 @@ class LineHTMLParser(HTMLParser):
 path = 'wikipediaFiles/output/'
 
 # ==================================================
-
-
 def process(files, i):
     count = 0
     for f in files:
