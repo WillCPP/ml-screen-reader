@@ -9,7 +9,7 @@ def pad_list(l):
     s = len(l)
     if s < 200:
         for i in range(s,200):
-            l.append(2)
+            l.append(0)
 
 class LineHTMLParser(HTMLParser):
     def __init__(self) -> None:
@@ -19,19 +19,19 @@ class LineHTMLParser(HTMLParser):
     def handle_starttag(self, tag, attrs):
         # print("Encountered a start tag:", tag)
         if len(self.data) < 200:
-            self.data.append(0)
+            self.data.append(1)
 
     def handle_endtag(self, tag):
         # print("Encountered an end tag :", tag)
         if len(self.data) < 200:
-            self.data.append(0)
+            self.data.append(1)
 
     def handle_data(self, data):
         # print("Encountered some data  :", data)
         if len(self.data) < 200 and data[0] != '(' and data[0] != '{':
             s = data.split(' ')
             for w in s[:200 - len(self.data)]:
-                self.data.append(1)
+                self.data.append(2)
             # print(f'DONE| {len(self.data)}')
 
 path = 'wikipediaFiles/output/'
@@ -42,8 +42,8 @@ path = 'wikipediaFiles/output/'
 def process(files, i):
     count = 0
     for f in files:
-        d = np.empty(shape=(0,200), dtype=int)
-        c = np.array([], dtype=int)
+        d = np.empty(shape=(0,200), dtype=np.float)
+        c = np.array([], dtype=np.float)
         atStart = True
         atEnd = False
         classList = []
@@ -55,9 +55,13 @@ def process(files, i):
                     line = file.readline()
                     if 'mw-headline' in line:
                         atStart = False
-                if 'id="Notes"' in line:
-                    atEnd = True
-                if not atEnd:
+                # if 'id="Notes"' in line:
+                #     atEnd = True
+                # if not atEnd:
+                #     classification = 1
+                # else:
+                #     classification = 0
+                if 2 in parser.data:
                     classification = 1
                 else:
                     classification = 0
@@ -66,7 +70,7 @@ def process(files, i):
                 pad_list(parser.data)
                 d = np.vstack((d, parser.data))
                 line = file.readline()
-        c = np.append(c, np.array(classList, dtype=int))
+        c = np.append(c, np.array(classList, dtype=np.float))
         np.save(f'dataset/data/{i}_{count}_data', d)
         np.save(f'dataset/labels/{i}_{count}_labels', c)
         count += 1
