@@ -67,6 +67,8 @@ def process(files, i):
                 classList.append(classification)
                 pad_list(parser.data)
                 d = np.vstack((d, parser.data))
+                if '</footer>' in line:
+                    break
                 line = file.readline()
         c = np.append(c, np.array(classList, dtype=np.float))
         np.save(f'dataset/data/{i}_{count}_data', d)
