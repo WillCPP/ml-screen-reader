@@ -28,7 +28,7 @@ class LineHTMLParser(HTMLParser):
 
     def handle_data(self, data):
         # print("Encountered some data  :", data)
-        if len(self.data) < 200 and data[0] != '(' and data[0] != '{':
+        if len(self.data) < 200 and data[0] != '(' and data[0] != '{' and data[0] != '.':
             s = data.split(' ')
             for w in s[:200 - len(self.data)]:
                 self.data.append(2)
