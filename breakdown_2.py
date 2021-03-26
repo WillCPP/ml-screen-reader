@@ -59,11 +59,11 @@ def process(files, i):
                 #     classification = 1
                 # else:
                 #     classification = 0
+                parser.feed(line)
                 if 2 in parser.data:
                     classification = 1
                 else:
                     classification = 0
-                parser.feed(line)
                 classList.append(classification)
                 pad_list(parser.data)
                 d = np.vstack((d, parser.data))
