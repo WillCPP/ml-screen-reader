@@ -28,7 +28,7 @@ class LineHTMLParser(HTMLParser):
 
     def handle_data(self, data):
         # print("Encountered some data  :", data)
-        if len(self.data) < 200 and data[0] != '(' and data[0] != '{':
+        if len(self.data) < 200 and data[0] != '(' and data[0] != '{' and data[0] != '.':
             s = data.split(' ')
             for w in s[:200 - len(self.data)]:
                 self.data.append(2)
@@ -59,11 +59,11 @@ def process(files, i):
                 #     classification = 1
                 # else:
                 #     classification = 0
+                parser.feed(line)
                 if 2 in parser.data:
                     classification = 1
                 else:
                     classification = 0
-                parser.feed(line)
                 classList.append(classification)
                 pad_list(parser.data)
                 d = np.vstack((d, parser.data))
