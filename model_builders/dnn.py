@@ -7,6 +7,7 @@ from tensorflow.keras.layers import Conv1D, GlobalMaxPooling1D, Dense
 from tensorflow.keras.models import Sequential
 import argparse
 import os
+from tensorflow.keras import backend as K
 
 if __name__ == '__main__':
     
@@ -63,7 +64,7 @@ if __name__ == '__main__':
     print(len(x_val), "Validation sequences")
     print(x_train.shape)
 
-    learning_rate = 0.001  # Learning rate.
+    learning_rate = 0.01  # Learning rate.
     num_epochs = 3  # Number of epochs.
 
     # Regular DNN ==================================================
@@ -75,31 +76,16 @@ if __name__ == '__main__':
 
         def createModel(self):
             layers = [
-                # keras.Input(shape=self.input_shape, dtype='float64'),
-                Conv1D(32, (200), input_shape=(200,1), activation="relu"),
+                Conv1D(32, (200), input_shape=(200, 1), activation="relu"),
                 Conv1D(32, 1, activation="relu"),
                 GlobalMaxPooling1D(),
                 Dense(32, activation="relu"),
-                # Dropout(0.5),
                 Dense(1, activation="sigmoid", name="predictions"),
-
-                # Conv2D(32, kernel_size=(3, 3), activation="relu"),
-                # MaxPooling2D(pool_size=(2, 2)),
-                # Conv2D(64, kernel_size=(3, 3), activation="relu"),
-                # MaxPooling2D(pool_size=(2, 2)),
-                # Conv2D(128, kernel_size=(3, 3), activation="relu"),
-                # MaxPooling2D(pool_size=(2, 2)),
-                # Flatten(),
-                # Dropout(0.5),
-                # Dense(self.num_classes, activation="softmax"),
             ]
             model = Sequential(layers)
             model.summary()
 
-            # loss = loss=keras.losses.CategoricalCrossentropy(from_logits=True)
-
-            # model.compile(optimizer=keras.optimizers.Adam(), loss=loss, metrics=[keras.metrics.CategoricalAccuracy()])
-            model.compile(loss="binary_crossentropy", optimizer=keras.optimizers.Adam(0.01), metrics=["accuracy"])
+            model.compile(loss="binary_crossentropy", optimizer=keras.optimizers.Adam(learning_rate), metrics=["accuracy"])
             self.model = model
 
         def train(self, x_train, y_train):
@@ -107,18 +93,11 @@ if __name__ == '__main__':
                 print('Model has not been created yet, run createModel() first.')
                 return
             else:
-                # optimizer = keras.optimizers.Adam(0.001)
-
-                # self.model.compile(optimizer=optimizer,
-                #     loss=keras.losses.CategoricalCrossentropy(),
-                #     metrics=[keras.metrics.CategoricalAccuracy()])
-
-                # self.model.fit(x_train, y_train, batch_size=self.params['batch_size'], epochs=self.params['epochs'], validation_split=self.params['validation_split'])
                 self.model.fit(x_train, y_train, epochs=num_epochs, validation_split=0.1)
         
         def saveModel(self, path):
-            self.model.save(path)
-            tf.saved_model.save(self.model, 'models/tf/1')
+#             self.model.save(path)
+            tf.saved_model.save(self.model, path + '/1')
 
         def loadModel(self, path):
             self.model = keras.models.load_model(path)
@@ -127,7 +106,8 @@ if __name__ == '__main__':
         dnn = DNN((200,),2,)
         dnn.createModel()
         dnn.train(x_train, y_train)
-        dnn.saveModel('models/current/1')
+        print(model_dir)
+        dnn.saveModel(model_dir)
         score = dnn.model.evaluate(x_val, y_val, verbose=0)
         print("Test loss:", score[0])
         print("Test accuracy:", score[1])
