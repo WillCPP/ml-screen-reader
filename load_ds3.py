@@ -1,3 +1,6 @@
+# This program is simply used to check 
+# the contents of the resulting dataset.
+
 import numpy as np
 
 ds_data = np.load('dataset3/data.npy', allow_pickle=True)

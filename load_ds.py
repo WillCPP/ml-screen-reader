@@ -1,3 +1,8 @@
+# This is the second step of the data preparation.
+# The second step is divided into two stages.
+# Each stage has a corresponding program (load_ds.py, load_ds2.py)
+# This program combines all of the output from breakdown_2.py into a single dataset.
+
 from os import listdir
 from os.path import isfile, join
 import numpy as np

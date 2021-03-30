@@ -1,3 +1,6 @@
+# This is the second stage of the second step of the data preparation.
+# This program takes a sample subset from the output of load_ds.py.
+
 import numpy as np
 from sklearn.model_selection import train_test_split
 

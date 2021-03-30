@@ -1,3 +1,8 @@
+# This is the first step of the data prepartion.
+# This program takes each saved webpage and transforms it into 
+# a list of arrays of values where each array represents one line 
+# of the webpage
+
 from os import listdir
 from os.path import isfile, join, split
 from html.parser import HTMLParser
