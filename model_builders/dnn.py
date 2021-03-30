@@ -8,6 +8,7 @@ from tensorflow.keras.models import Sequential
 import argparse
 import os
 from tensorflow.keras import backend as K
+from tensorflow.keras.utils import to_categorical
 
 if __name__ == '__main__':
     
@@ -57,8 +58,36 @@ if __name__ == '__main__':
     y_train = np.load(os.path.join(training_dir, 'training.npz'))['label']
     x_val  = np.load(os.path.join(validation_dir, 'validation.npz'))['image']
     y_val  = np.load(os.path.join(validation_dir, 'validation.npz'))['label']
+    
     x_train = x_train.reshape(x_train.shape[0], x_train.shape[1], 1)
     x_val = x_val.reshape(x_val.shape[0], x_val.shape[1], 1)
+    
+    count_0 = 0
+    count_1 = 0
+    index_0 = -1
+    for i in y_val:
+        if i == 0.0:
+            count_0 += 1
+            if index_0 == -1:
+                index_0 = count_0 + count_1 - 2
+        if i == 1.0:
+            count_1 += 1
+    print(f'0: {count_0}')
+    print(f'1: {count_1}')
+    print(f'i: {index_0}')
+    
+    y_train = to_categorical(y_train, num_classes=2)
+    y_val = to_categorical(y_val, num_classes=2)
+                           
+#     print(y_val[0])
+#     print(y_val[index_0])
+#     print(y_val[index_0+1])
+#     print(y_val[index_0+2])
+#     print(y_val[index_0+3])
+#     print(x_val[index_0])
+#     print(x_val[index_0+1])
+#     print(x_val[index_0+2])
+#     print(x_val[index_0+3])
 
     print(len(x_train), "Training sequences")
     print(len(x_val), "Validation sequences")
@@ -80,12 +109,13 @@ if __name__ == '__main__':
                 Conv1D(32, 1, activation="relu"),
                 GlobalMaxPooling1D(),
                 Dense(32, activation="relu"),
-                Dense(1, activation="sigmoid", name="predictions"),
+                Dense(2, activation="softmax", name="predictions"),
             ]
             model = Sequential(layers)
             model.summary()
 
-            model.compile(loss="binary_crossentropy", optimizer=keras.optimizers.Adam(learning_rate), metrics=["accuracy"])
+            loss = keras.losses.CategoricalCrossentropy(from_logits=True)
+            model.compile(loss=loss, optimizer=keras.optimizers.Adam(learning_rate), metrics=[keras.metrics.CategoricalAccuracy()])
             self.model = model
 
         def train(self, x_train, y_train):
